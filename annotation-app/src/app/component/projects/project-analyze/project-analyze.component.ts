@@ -223,6 +223,42 @@ export class ProjectAnalyzeComponent implements OnInit {
     this.msgAppend = this.projectInfo;
   }
 
+  ngAfterContentInit() {
+    // Fetch annotation history
+    this.apiService.getUserAnnotationHistory(this.projectId).subscribe(
+      (res) => {
+	console.log(res);
+        this.annotationHistory = this.parseAnnotationHistory(res);
+      },
+      (err) => {
+        console.log(err);
+      }
+    );
+  }
+
+  parseAnnotationHistory(history) {
+    //TODO parse response to annotationHistory;
+    const annotationHistory = history.map((item) => ({
+      srId: item.id,
+      category: item.userInputs.map((userInput) => ({
+        [userInput.problemCategory.label]: userInput.problemCategory.value
+      })),
+      historyDescription: Object.entries(item.originalData).map((key, value) => ({
+        html: value,
+        key: key,
+        value: value,
+      })),
+      type: 'submit',
+      rewrite: '',
+      solution: '',
+      images: '',
+      activeClass: -1
+    }));
+
+    return annotationHistory;
+  } 
+	  
+
   dealShowAppendTabs(data) {
     if (this.user.role === 'Power User' && data.tabType === 'admin') {
       return false;

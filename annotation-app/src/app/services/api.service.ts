@@ -111,6 +111,10 @@ export class ApiService {
     return this.http.get(`${this.baseUrl}/projects/users/progression?pid=${payload.id}&review=${payload.review}`);
   }
 
+  public getUserAnnotationHistory(pid?: any): Observable<any> {
+    return this.http.get<any>(`${this.baseUrl}/projects/userAnnotationHistory?pid=${pid}`);
+  }
+
   public putSrUserInput(srUserInput: SrUserInput): Observable<any> {
     return this.http.patch<any>(`${this.baseUrl}/projects/tickets`, srUserInput);
   }

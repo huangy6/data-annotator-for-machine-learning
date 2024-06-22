@@ -194,4 +194,14 @@ router.get(APIs.SRS_QUERY_FOR_REVIEW, (req, res) => {
     });
 });
 
+router.get(APIs.SRS_USER_ANNOTATION_HISTORY, (req, res) => {
+    console.log(`[ SRS ] [ ACCESS ] Router ${req.originalUrl} ${req.auth.email}`);
+    srsService.getUserAnnotationHistory(req).then(response =>{
+        console.log(`[ SRS ] [ SUCCESS ] Router ${req.originalUrl} ${req.auth.email}`);
+        res.status(200).json(response);
+    }).catch(error => {
+        console.log(`[ SRS ] [ ERROR ] Router ${req.originalUrl} ${req.auth.email}`, error);
+        res.status(500).send(error);
+    });
+});
 module.exports = router;

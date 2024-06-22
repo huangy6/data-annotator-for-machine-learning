@@ -478,6 +478,17 @@ async function getSelectedSrsById(req) {
     return srs;
 }
 
+async function getUserAnnotationHistory(req) {
+    console.log(`[ SRS ] Service getUserAnnotationHistory.queryUserAnnotationHistory`);
+    const mp = await getModelProject({ _id: ObjectId(req.query.pid) });
+    const user_email = req.auth.email;
+
+    const projectName = await mongoDb.findById(ProjectModel, ObjectId(req.query.pid), "projectName");
+    const filteredFields = { _id: 1, userInputs: 1, originalData: 1 }; 
+    const conditions = { $and: [{ projectName: projectName.projectName }, { userInputs: { $elemMatch: { user: user_email } } }] };
+    return mongoDb.findByConditions(mp.model, conditions, filteredFields);
+}
+
 async function getProgress(req) {
     console.log(`[ SRS ] Service getProgress query user completed case `);
     const projectInfo = await mongoDb.findById(ProjectModel, ObjectId(req.query.pid));
@@ -1489,5 +1500,6 @@ module.exports = {
     mostUnscertainQueryForReview,
     removeSkippedCase,
     findSkippedCase,
+    getUserAnnotationHistory,
 
 }
